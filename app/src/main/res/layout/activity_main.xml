@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,26 +8,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/count"
-            android:layout_width="wrap_content"
+            android:id="@+id/game_word"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:gravity="center"
+            android:letterSpacing="0.6"
+            android:padding="40dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30sp"
+            tools:text="I_E_REAM" />
+
+        <TextView
+            android:id="@+id/you_win"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:letterSpacing="0.6"
+            android:padding="40dp"
+            android:text="YOU WIN!"
+            android:textColor="#ef5350"
+            android:textSize="30sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/current_guesses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingBottom="10dp"
+            android:paddingStart="5dp"
+            android:paddingTop="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
+            tools:text="PTIEREAM" />
+
+        <EditText
+            android:id="@+id/guess_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter a letter"
+            android:maxLines="1" />
 
         <Button
-            android:id="@+id/increment"
-            android:layout_width="wrap_content"
+            android:id="@+id/guess_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/count" />
+            android:text="GUESS" />
+
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:text="RESET" />
 
     </LinearLayout>
 
