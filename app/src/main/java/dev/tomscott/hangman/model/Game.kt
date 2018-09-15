@@ -22,7 +22,6 @@ class Game {
 
         currentGuesses.add(letter)
 
-        //TODO: MOVE THIS, YOU FOOL
         won = currentGuesses.containsAll(word.toSet())
     }
 

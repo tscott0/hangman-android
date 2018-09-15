@@ -18,25 +18,13 @@ class MainActivity : AppCompatActivity() {
         ViewModelProviders.of(this).get(GameViewModel::class.java)
     }
 
-    private lateinit var guessEditText: EditText
-    private lateinit var guessButton: Button
-    private lateinit var gameWordTextView: TextView
-    private lateinit var youWinTextView: TextView
-    private lateinit var currentGuesses: TextView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        youWinTextView = findViewById(R.id.you_win)
-        guessEditText = findViewById(R.id.guess_edit_text)
-        guessButton = findViewById(R.id.guess_button)
-        gameWordTextView = findViewById(R.id.game_word)
-        currentGuesses = findViewById(R.id.current_guesses)
-
-        guessButton.setOnClickListener {
-            viewModel.makeGuess(guessEditText.text.toString())
-            guessEditText.text.clear()
+        guess_button.setOnClickListener {
+            viewModel.makeGuess(guess_edit_text.text.toString())
+            guess_edit_text.text.clear()
         }
 
         reset_button.setOnClickListener {
@@ -44,12 +32,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.getGame().observe(this, Observer<Game> { game ->
-            currentGuesses.text = game?.getCurrentGuesses()
+            current_guesses.text = game?.getCurrentGuesses()
             if (game?.getWon() == true) {
-                youWinTextView.visibility = View.VISIBLE
-                gameWordTextView.visibility = View.GONE
+                game_word.visibility = View.GONE
+                guess_button.visibility = View.GONE
+
+                you_win.visibility = View.VISIBLE
+                reset_button.visibility = View.VISIBLE
             } else {
-                gameWordTextView.text = viewModel.getGameWord().value
+                game_word.text = viewModel.getGameWord().value
+
+                you_win.visibility = View.GONE
+                reset_button.visibility = View.GONE
+
+                game_word.visibility = View.VISIBLE
+                guess_button.visibility = View.VISIBLE
             }
         })
 
