@@ -1,14 +1,11 @@
 package dev.tomscott.hangman.model
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-
 class Game {
 
     private val dictionary = Dictionary()
 
     private var word: String
-    private var currentGuesses: MutableSet<Char> = mutableSetOf()
+    private var currentGuesses: MutableList<Char> = mutableListOf()
     private var won = false
 
     init {
@@ -29,8 +26,12 @@ class Game {
         return word
     }
 
-    fun getCurrentGuesses(): String {
-        return currentGuesses.sorted().toString()
+    fun getCurrentGuesses(): List<Char> {
+        return currentGuesses
+    }
+
+    fun getIncorrectGuesses(): List<Char> {
+        return currentGuesses.minus(word.asIterable())
     }
 
     fun getWon(): Boolean {
@@ -39,7 +40,7 @@ class Game {
 
     fun reset(): Game {
         word = dictionary.randomWord()
-        currentGuesses = mutableSetOf()
+        currentGuesses = mutableListOf()
         won = false
         return this
     }

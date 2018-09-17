@@ -6,6 +6,8 @@ import android.arch.lifecycle.ViewModel
 import android.util.Log
 import dev.tomscott.hangman.model.Game
 import dev.tomscott.hangman.utils.GuessValidator
+import dev.tomscott.hangman.utils.StringFormatter.formatGameWord
+import dev.tomscott.hangman.utils.StringFormatter.formatIncorrectGuesses
 
 class GameViewModel : ViewModel() {
 
@@ -14,55 +16,43 @@ class GameViewModel : ViewModel() {
         return game
     }
 
-    private var gameWord = MutableLiveData<String>()
-    fun getGameWord(): LiveData<String> {
-        return gameWord
+    fun getGameWord(): String {
+        game.value?.let {
+            return formatGameWord(it.getWord(), it.getCurrentGuesses())
+        }
+
+        return ""
     }
 
-    fun updateGameWord() {
+    fun getIncorrectGuesses(): String {
         game.value?.let {
-            val currentWord = it.getWord()
-
-            var displayString = ""
-
-            for (value in currentWord) {
-                displayString += if (it.getCurrentGuesses().contains(value)) {
-                    value
-                } else {
-                    "_"
-                }
-            }
-
-            gameWord.value = displayString
+            return formatIncorrectGuesses(it.getIncorrectGuesses())
         }
+
+        return ""
     }
 
     init {
         game.value = Game()
-        updateGameWord()
     }
 
-    fun makeGuess(guessString: String): Boolean {
+    fun makeGuess(guessString: String) {
         Log.i("GuessViewModel", "makeGuess $guessString")
 
         val sanitizedGuess = guessString.toUpperCase().trim()
 
         if (!GuessValidator.guessIsValid(sanitizedGuess)) {
-            return false
+            return
         }
 
         val guessChar = sanitizedGuess.toCharArray()[0]
 
         game.value?.guess(guessChar)
-        updateGameWord()
-
         game.postValue(game.value)
-        return true
     }
 
     fun reset() {
         game.postValue(game.value?.reset())
-        updateGameWord()
     }
 
 }

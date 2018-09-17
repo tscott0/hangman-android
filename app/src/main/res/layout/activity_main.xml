@@ -35,7 +35,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/current_guesses"
+            android:id="@+id/incorrect_guesses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
