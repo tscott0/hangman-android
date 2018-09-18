@@ -34,7 +34,7 @@ class Game {
         return currentGuesses.minus(word.asIterable())
     }
 
-    fun getWon(): Boolean {
+    fun getGameState(): Boolean {
         return won
     }
 

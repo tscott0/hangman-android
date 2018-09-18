@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import dev.tomscott.hangman.model.Game
 import dev.tomscott.hangman.viewmodel.GameViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,6 +13,8 @@ class MainActivity : AppCompatActivity() {
     private val gameViewModel: GameViewModel by lazy {
         ViewModelProviders.of(this).get(GameViewModel::class.java)
     }
+
+    private val DEFAULT_GAME_STATE = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,25 +29,29 @@ class MainActivity : AppCompatActivity() {
             gameViewModel.reset()
         }
 
-        gameViewModel.getGame().observe(this, Observer<Game> { game ->
-            if (game != null) {
-                incorrect_guesses.text = gameViewModel.getIncorrectGuesses()
+        gameViewModel.getIncorrectGuesses().observe(this, Observer {
+            incorrect_guesses.text = it
+        })
 
-                if (game.getWon()) {
-                    game_word.visibility = View.GONE
-                    guess_button.visibility = View.GONE
+        gameViewModel.getGameWordLiveData().observe(this, Observer {
+            game_word.text = it
+        })
 
-                    you_win.visibility = View.VISIBLE
-                    reset_button.visibility = View.VISIBLE
-                } else {
-                    game_word.text = gameViewModel.getGameWord()
+        gameViewModel.getGameStateLiveData().observe(this, Observer {
+            val gameState = it ?: DEFAULT_GAME_STATE
 
-                    you_win.visibility = View.GONE
-                    reset_button.visibility = View.GONE
+            if (gameState) {
+                game_word.visibility = View.GONE
+                guess_button.visibility = View.GONE
 
-                    game_word.visibility = View.VISIBLE
-                    guess_button.visibility = View.VISIBLE
-                }
+                you_win.visibility = View.VISIBLE
+                reset_button.visibility = View.VISIBLE
+            } else {
+                you_win.visibility = View.GONE
+                reset_button.visibility = View.GONE
+
+                game_word.visibility = View.VISIBLE
+                guess_button.visibility = View.VISIBLE
             }
         })
     }
