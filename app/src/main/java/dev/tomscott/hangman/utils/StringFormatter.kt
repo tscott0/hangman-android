@@ -4,7 +4,7 @@ object StringFormatter {
 
     fun formatIncorrectGuesses(incorrectGeusses: Iterable<Char>?): String {
         incorrectGeusses?.let {
-            return it.toString()
+            return it.joinToString(separator=" ")
         }
 
         return ""
