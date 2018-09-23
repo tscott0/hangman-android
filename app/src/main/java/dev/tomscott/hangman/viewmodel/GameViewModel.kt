@@ -6,22 +6,22 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.util.Log
 import dev.tomscott.hangman.model.Game
+import dev.tomscott.hangman.model.GameState
 import dev.tomscott.hangman.utils.GuessValidator
 import dev.tomscott.hangman.utils.StringFormatter.formatGameWord
 import dev.tomscott.hangman.utils.StringFormatter.formatIncorrectGuesses
 
 class GameViewModel : ViewModel() {
 
+    private lateinit var game: Game
+
     // LiveData
     private var gameLiveData = MutableLiveData<Game>()
     private var gameWordLiveData: LiveData<String> = Transformations.map(gameLiveData) { game ->
-        formatGameWord(game.getWord(), game.getCurrentGuesses())
+        formatGameWord(game.targetWord, game.getCurrentGuesses())
     }
     private var incorrectGuessesLiveData: LiveData<String> = Transformations.map(gameLiveData) { game ->
         formatIncorrectGuesses(game.getIncorrectGuesses())
-    }
-    private var winStateLiveData: LiveData<Boolean> = Transformations.map(gameLiveData) { game ->
-        game.getGameState()
     }
 
     fun getGameWordLiveData(): LiveData<String> {
@@ -32,12 +32,17 @@ class GameViewModel : ViewModel() {
         return incorrectGuessesLiveData
     }
 
-    fun getGameStateLiveData(): LiveData<Boolean> {
-        return winStateLiveData
+    fun getGameStateLiveData(): LiveData<GameState> {
+        return game.getGameState()
+    }
+
+    fun getTargetWord(): LiveData<String> {
+        return game.getTargetWord()
     }
 
     init {
-        gameLiveData.value = Game()
+        game = Game()
+        gameLiveData.value = game
     }
 
     // User Interaction

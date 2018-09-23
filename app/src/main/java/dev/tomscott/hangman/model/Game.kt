@@ -1,16 +1,32 @@
 package dev.tomscott.hangman.model
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+
 class Game {
+
+    init {
+        reset()
+    }
 
     private val dictionary = Dictionary()
 
-    private var word: String
-    private var currentGuesses: MutableList<Char> = mutableListOf()
-    private var won = false
-
-    init {
-        word = dictionary.randomWord()
+    // LiveData
+    private var targetWordLiveData = MutableLiveData<String>()
+    fun getTargetWord(): LiveData<String> {
+        return targetWordLiveData
     }
+
+    private var gameState = MutableLiveData<GameState>()
+    fun getGameState(): LiveData<GameState> {
+        return gameState
+    }
+
+    private var currentGuesses: MutableList<Char> = mutableListOf()
+    val targetWord: String
+        get() {
+            return targetWordLiveData.value ?: ""
+        }
 
     fun guess(letter: Char) {
         if (currentGuesses.contains(letter)) {
@@ -19,11 +35,18 @@ class Game {
 
         currentGuesses.add(letter)
 
-        won = currentGuesses.containsAll(word.toSet())
+        if (currentGuesses.containsAll(targetWord.toSet())) {
+            gameState.value = GameState.WON
+        } else if (getIncorrectGuesses().size > 8) {
+            gameState.value = GameState.LOST
+        }
     }
 
-    fun getWord(): String {
-        return word
+    fun reset(): Game {
+        targetWordLiveData.value = dictionary.randomWord()
+        currentGuesses = mutableListOf()
+        gameState.value = GameState.PLAYING
+        return this
     }
 
     fun getCurrentGuesses(): List<Char> {
@@ -31,18 +54,7 @@ class Game {
     }
 
     fun getIncorrectGuesses(): List<Char> {
-        return currentGuesses.minus(word.asIterable())
-    }
-
-    fun getGameState(): Boolean {
-        return won
-    }
-
-    fun reset(): Game {
-        word = dictionary.randomWord()
-        currentGuesses = mutableListOf()
-        won = false
-        return this
+        return currentGuesses.minus(targetWord.asIterable())
     }
 
 }

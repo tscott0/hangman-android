@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import dev.tomscott.hangman.model.GameState
 import dev.tomscott.hangman.viewmodel.GameViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -37,21 +38,37 @@ class MainActivity : AppCompatActivity() {
             game_word.text = it
         })
 
+        gameViewModel.getTargetWord().observe(this, Observer {
+            target_word.text = it
+        })
+
         gameViewModel.getGameStateLiveData().observe(this, Observer {
             val gameState = it ?: DEFAULT_GAME_STATE
 
-            if (gameState) {
-                game_word.visibility = View.GONE
-                guess_button.visibility = View.GONE
+            when (gameState) {
+                GameState.WON -> {
+                    end_message.text = "YOU WON \uD83D\uDE01"
+                    game_word.visibility = View.GONE
+                    guess_button.visibility = View.GONE
 
-                you_win.visibility = View.VISIBLE
-                reset_button.visibility = View.VISIBLE
-            } else {
-                you_win.visibility = View.GONE
-                reset_button.visibility = View.GONE
+                    game_ended.visibility = View.VISIBLE
+                    reset_button.visibility = View.VISIBLE
+                }
+                GameState.LOST -> {
+                    end_message.text = "YOU LOST \uD83D\uDE14"
+                    game_word.visibility = View.GONE
+                    guess_button.visibility = View.GONE
 
-                game_word.visibility = View.VISIBLE
-                guess_button.visibility = View.VISIBLE
+                    game_ended.visibility = View.VISIBLE
+                    reset_button.visibility = View.VISIBLE
+                }
+                GameState.PLAYING -> {
+                    game_ended.visibility = View.GONE
+                    reset_button.visibility = View.GONE
+
+                    game_word.visibility = View.VISIBLE
+                    guess_button.visibility = View.VISIBLE
+                }
             }
         })
     }
