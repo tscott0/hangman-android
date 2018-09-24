@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Hangman</string>
+    <string name="enter_letter_hint">Enter a letter</string>
+    <string name="guess_button_text">GUESS</string>
+    <string name="reset_button_text">RESET</string>
+    <string name="you_won_message">YOU WON 😁</string>
+    <string name="you_lost_message">YOU LOST 😔</string>
 </resources>

@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import dev.tomscott.hangman.model.GameState
 import dev.tomscott.hangman.viewmodel.GameViewModel
@@ -26,6 +28,20 @@ class MainActivity : AppCompatActivity() {
             guess_edit_text.text.clear()
         }
 
+        guess_edit_text.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                gameViewModel.makeGuess(guess_edit_text.text.toString())
+                guess_edit_text.text.clear()
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+        })
+
         reset_button.setOnClickListener {
             gameViewModel.reset()
         }
@@ -47,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
             when (gameState) {
                 GameState.WON -> {
-                    end_message.text = "YOU WON \uD83D\uDE01"
+                    end_message.text = resources.getString(R.string.you_won_message)
                     game_word.visibility = View.GONE
                     guess_button.visibility = View.GONE
 
@@ -55,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                     reset_button.visibility = View.VISIBLE
                 }
                 GameState.LOST -> {
-                    end_message.text = "YOU LOST \uD83D\uDE14"
+                    end_message.text = resources.getString(R.string.you_lost_message)
                     game_word.visibility = View.GONE
                     guess_button.visibility = View.GONE
 

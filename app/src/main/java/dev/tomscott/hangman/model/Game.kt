@@ -5,10 +5,6 @@ import android.arch.lifecycle.MutableLiveData
 
 class Game {
 
-    init {
-        reset()
-    }
-
     private val dictionary = Dictionary()
 
     // LiveData
@@ -27,6 +23,10 @@ class Game {
         get() {
             return targetWordLiveData.value ?: ""
         }
+
+    init {
+        reset()
+    }
 
     fun guess(letter: Char) {
         if (currentGuesses.contains(letter)) {
